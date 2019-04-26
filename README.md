@@ -1,8 +1,8 @@
 blackboard_scraper
-by Jason Giancono jasongi.com/blackboard-scraper
+by Jason Giancono jasongi.com/blackboard-scraper et al
 ==================
 
-Tool (with GUI) for easy downloading of lecture slides and other material from blackboard at UOIT
+Tool (with GUI) for easy downloading of lecture slides and other material from blackboard at The University of Sheffield (MOLE/MOLE2/VLE)
 
 Blackboard Scraper: A tool for scraping unit material off Blackboard written in Python. Current functionality allows scraping of unit materials and scraping of iLectures if you visit the iLecture page and paste in the RSS feed link.
 

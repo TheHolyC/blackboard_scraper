@@ -51,7 +51,9 @@ if "Darwin" in platform.system():
 # ------------------------------------------------------------------------------#
 
 #blackBoardBaseURL = "lms.curtin.edu.au"
-blackBoardBaseURL = 'uoit.blackboard.com'
+#blackBoardBaseURL = 'uoit.blackboard.com'
+blackBoardBaseURL = 'vle.shef.ac.uk'
+
 valid_chars = '-_.() abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-'
 
 #sanitizes the filenames for windows (and hopefully other OS' too!)
@@ -559,10 +561,10 @@ class BlackboardSession():
         self.unitList = []
         self.iLectureList = []
 
-        if (blackBoardBaseURL.find("uoit") != -1):
+        if (1!=-1):
             self.password = password
         else:
-            self.password = base64.b64encode(password)
+            self.password = base64.b64encode(password.encode("utf-8"))
         self.username = user
 
         if (blackBoardBaseURL.find("uoit") != -1):
@@ -570,14 +572,14 @@ class BlackboardSession():
         else:
             self.url = 'https://' + blackBoardBaseURL + '/webapps/login/'
 
-        if (blackBoardBaseURL.find("uoit") != -1):
+        if (0 != -1):
             loginTemp = self.session.get(self.url)
             loginTemp_html = lxml.html.fromstring(loginTemp.text)
             loginTemp_hiddenInputs = loginTemp_html.xpath(r'//form//input[@type="hidden"]')
             self.payload = {x.attrib["name"] : x.attrib["value"] for x in loginTemp_hiddenInputs}
-            self.payload['username'] = self.username
+            self.payload['user_id'] = self.username
             self.payload['password'] = self.password
-            self.payload['submit']   = 'LOGIN'
+            self.payload['login']   = 'Login'
 
         else:
             self.payload = {
@@ -591,9 +593,9 @@ class BlackboardSession():
         #req = \
         self.sessionr.get(self.url)
         sleep(.5)
-        self.sessionr.find_element_by_id("username").send_keys(self.username)
+        self.sessionr.find_element_by_id("user_id").send_keys(self.username)
         self.sessionr.find_element_by_id("password").send_keys(self.password)
-        self.sessionr.find_element_by_name("submit").click()
+        self.sessionr.find_element_by_id("entry-login").send_keys('\n')
 
         #print(self.session.current_url)
         self.session.post(self.url, data=self.payload, allow_redirects = True)
