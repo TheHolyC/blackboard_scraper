@@ -252,37 +252,37 @@ class BlackboardUnit():
 
         ## for pdfs
 
-        for htmlLink in soup.find("div", {"id":"containerdiv"}).find_all('li'):
-            if htmlLink.get('id') is None or htmlLink is None:
-                continue
-
-            if 'contentListItem' in htmlLink.get('id'):
-                if htmlLink.text != htmlLink.div.h3.text:
-                    tempT = self.cssHeader + htmlLink.prettify( formatter="html" )
-                    #tempT = htmlLink.prettify( formatter="html" )
-                    options = {
-                    'quiet': ''
-                    }
-                    #pdfkit.from_string(temp, "temp_" + str(number) + ".pdf", options=options)
-                    tempT = pdfkit.from_string(tempT, False, options=options)
-
-                    #temp =""
-                    #with open("temp_" + str(number) + ".pdf", "rb") as byteObject:
-                    #    temp = byteObject.read()
-                    tempPath = path + '/' + self.name + '/'
-
-                    if len(folder_name) > 0:
-                        tempPath += folder_name + '/'
-
-                    if not os.path.isdir(tempPath):
-                        os.makedirs(tempPath)
-
-                    if not (os.path.isfile(tempPath + sanitize(htmlLink.div.h3.text) + ".pdf")):
-                        with open(tempPath + sanitize(htmlLink.div.h3.text) + ".pdf", "wb") as file:
-                            file.write(tempT)
-                            file.flush()
-
-
+#        for htmlLink in soup.find("div", {"id":"containerdiv"}).find_all('li'):
+#            if htmlLink.get('id') is None or htmlLink is None:
+#                continue
+#
+#            if 'contentListItem' in htmlLink.get('id'):
+#                if htmlLink.text != htmlLink.div.h3.text:
+#                    tempT = self.cssHeader + htmlLink.prettify( formatter="html" )
+#                    #tempT = htmlLink.prettify( formatter="html" )
+#                    options = {
+#                    'quiet': ''
+#                    }
+#                    #pdfkit.from_string(temp, "temp_" + str(number) + ".pdf", options=options)
+#                    tempT = pdfkit.from_string(tempT, False, options=options)
+#
+#                    #temp =""
+#                    #with open("temp_" + str(number) + ".pdf", "rb") as byteObject:
+#                    #    temp = byteObject.read()
+#                    tempPath = path + '/' + self.name + '/'
+#
+#                    if len(folder_name) > 0:
+#                        tempPath += folder_name + '/'
+#
+#                    if not os.path.isdir(tempPath):
+#                        os.makedirs(tempPath)
+#
+#                    if not (os.path.isfile(tempPath + sanitize(htmlLink.div.h3.text) + ".pdf")):
+#                        with open(tempPath + sanitize(htmlLink.div.h3.text) + ".pdf", "wb") as file:
+#                            file.write(tempT)
+#                            file.flush()
+#
+#
 
         ## For attachments
         for htmlLink in soup.find("div", {"id":"containerdiv"}).find_all('li'):
@@ -492,7 +492,7 @@ class BlackboardUnit():
         #request = self.session.get('https://' + blackBoardBaseURL + '/webapps/blackboard/execute/launcher?type=Course&id=_' + self.uid + '_1')
         self.sessionr.get('https://' + blackBoardBaseURL + '/webapps/blackboard/execute/launcher?type=Course&id=_' + self.uid + '_1')
         sleep(3)
-
+        
         #soup = BeautifulSoup(request.text, "html.parser")
         soup = BeautifulSoup(self.sessionr.page_source, "html.parser")
 
@@ -554,7 +554,7 @@ class BlackboardSession():
         self.session = requests.Session()
 
         self.options = Options()
-        self.options.headless = True
+        self.options.headless = False
         self.sessionr = webdriver.Chrome(options=self.options)
 
 
@@ -590,9 +590,10 @@ class BlackboardSession():
                 }
 
 
-        #req = \
+        #req =
         self.sessionr.get(self.url)
         sleep(.5)
+        self.sessionr.find_element_by_id("agree_button").send_keys('\n')
         self.sessionr.find_element_by_id("user_id").send_keys(self.username)
         self.sessionr.find_element_by_id("password").send_keys(self.password)
         self.sessionr.find_element_by_id("entry-login").send_keys('\n')
